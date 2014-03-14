@@ -1,0 +1,9 @@
+console.log('Enter 2');
+		console.log(pos);
+		inputModel.set({'pos':pos++});
+		console.log('exit 1');
+		rangeSearchBST();
+
+		if(aryIn[pos] < aryIn[valueIdx]){
+		return 'Done';
+	}

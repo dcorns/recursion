@@ -1,11 +1,8 @@
 //Model $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 var MainModel = Backbone.Model.extend({});
-var inputModel = new MainModel({aryIn:[3,12,7,25,60,2,56,90,8,15],pos:1,aryPos:[], valueIdx:0});
-var outputModel = new MainModel({min: 'Mn', max: 'Mx',sorted:[], leftSet: false, rightSet:false});
+var inputModel = new MainModel({aryIn:[3,12,6],offset:0,aryOffset:[], valueIdx:0});
+var outputModel = new MainModel({valuePos:0,sorted:[]});
 //Model Events
-inputModel.on('change',function(){
-	alert('input changed to '+console.log(inputModel.get('root')));
-});
 
 
 //View $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -17,40 +14,42 @@ var inputView = new MainView({model: inputModel});
 var rangeSearchBST = function(){
 	
 	//load model values
-	console.log('rangeSearchBST--Start');
+//	console.log('rangeSearchBST--Start');
 	var arySorted = outputModel.get('sorted');
-	var aryPos = inputModel.get('aryPos');
+	var aryOffset = inputModel.get('aryOffset');
 	var aryIn = inputModel.get('aryIn');
-	var pos = inputModel.get('pos');
-	var valueIdx = inputModel.get('valueIdx');
+	console.log(aryOffset);
+//	var valueIdx = inputModel.get('valueIdx');
 
-	console.log(valueIdx+','+pos);
-	console.log(aryPos); console.log(aryIn.length);
-	if (valueIdx > aryIn.length){
-		console.log(aryPos);
+	
+	var valueIdx = inputModel.get('valueIdx');
+	//When valueIdx is greater that the length of input array the positions have all been asigned return sort.
+	if(valueIdx > aryIn.length){
+
 		return;
 	}
 
-	
-	if (pos > aryIn.length){
-		console.log('enter 1');
-		aryPos.push(valueIdx);
-		inputModel.set({'aryPos':aryPos});
-		pos = valIdx+2;
-		inputModel.set({'valueIdx':valueIdx++});
-		console.log('exit 1');
-		rangeSearchBST();	
+
+	//valueIdx incremented here to select the next test value also reset pos to match valueIdx + 1 for next comparison value and reset valuePos to start position at current postition and add pos for the current root value to aryPos.
+	var offset = inputModel.get('offset');
+	if(offset > aryIn.length){
+		inputModel.set({'valueIdx':inputModel.get('valueIdx')+1});
+		aryOffset.push(outputModel.get('valueOffset'));
+		inputModel.set({'aryOffset':aryOffset});
+		offset = inputModel.get('valueIdx') + 1;
+		outputModel.set({'valuePos':inputModel.get('valueIdx')});
+
+
 	}
-	console.log(aryIn[pos]); console.log(aryIn[valueIdx]);
-	if(aryIn[pos] < aryIn[valueIdx]){
-		console.log('Enter 2');
-		console.log(pos);
-		inputModel.set({'pos':pos++});
-		console.log('exit 1');
-		rangeSearchBST();
+	//If a value is less than value being tested, advance the values position index
+	if(aryIn[inputModel.get('valueIdx')] > aryIn[offset]){
+		outputModel.set({'valuePos':offset});
 	}
 
-	
-	
+	//pos points to each element that has not compared
+	offset++;
+		inputModel.set({'offset':offset});
+		console.log('valueIdx:'+inputModel.get('valueIdx')+', offset'+inputModel.get('offset')+', valuePos:'+outputModel.get('valuePos'));
+	rangeSearchBST();
 
 }
